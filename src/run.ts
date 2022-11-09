@@ -128,9 +128,13 @@ async function runLint(lintPath: string, patchPath: string): Promise<void> {
       .map((arg) => arg.replace(/^-+/, ``))
   )
   if (userArgNames.has(`out-format`)) {
-    throw new Error(`please, don't change out-format for golangci-lint: it can be broken in a future`)
+    throw new Error(`please, don't change out-format for golangci-lint: it can be broken in a future. Use action input: extra-out-format`)
   }
   addedArgs.push(`--out-format=github-actions`)
+
+  if (userArgNames.has(`extra-out-format`)) {
+    addedArgs.push(`--out-format=${core.getInput(`extra-out-format`)}`)
+  }
 
   if (patchPath) {
     if (userArgNames.has(`new`) || userArgNames.has(`new-from-rev`) || userArgNames.has(`new-from-patch`)) {
